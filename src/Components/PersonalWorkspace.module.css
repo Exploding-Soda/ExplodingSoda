@@ -1,0 +1,90 @@
+.workspace {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: transparent;
+  padding: 20px;
+}
+
+.dock {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: rgba(63, 60, 60, 0.5);
+  padding: 8px 16px;
+  border-radius: 16px;
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, width 0.5s ease, padding 0.5s ease;
+}
+
+.dock:hover {
+  transform: translateX(-50%) scale(1.05);
+}
+
+.dockItem {
+  display: inline-block;
+  margin: 0 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease, margin 0.3s ease, opacity 0.5s ease;
+  opacity: 0;
+  transform: scale(0);
+  animation: fadeInScale 0.5s forwards;
+}
+
+.dockItem img {
+  width: 48px;
+  height: 48px;
+}
+
+.dockItem:hover img {
+  transform: scale(1.2);
+}
+
+.dockItem:hover {
+  margin-top: -10px;
+}
+
+.dockItem:active img {
+  transform: scale(1.1);
+}
+
+.dockItem:active {
+  margin-top: -5px;
+}
+
+.divider {
+  width: 1px;
+  height: 30px;
+  background-color: #ccc;
+  margin: 0 10px;
+  transition: opacity 0.5s ease;
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeOutScale {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
