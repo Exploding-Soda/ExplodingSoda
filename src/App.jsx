@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import LockScreen from './Components/LockScreen';
 import PersonalWorkspace from './Components/PersonalWorkspace';
-import ProjectBrowser from './Components/ProjectBrowser';
+// import ProjectBrowser from './Components/ProjectBrowser';
 import AlternativeComponent from './Components/AlternativeComponent';
+import Dashboard from './Components/Dashboard'
 import './App.css';
 
 function App() {
@@ -46,11 +47,14 @@ function App() {
                 <div className="section">
                     <PersonalWorkspace />
                 </div>
-                <div className="section">
+                {/* <div className="section">
                     <ProjectBrowser />
-                </div>
+                </div> */}
                 <div className="section">
                     <AlternativeComponent />
+                </div>
+                <div className="section">
+                    <Dashboard />
                 </div>
             </div>
         </div>

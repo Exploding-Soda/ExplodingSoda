@@ -1,41 +1,35 @@
 import React, { useState } from 'react';
 import DraggableWindow from './DraggableWindow';
+import ProjectBrowser from './ProjectBrowser';
 import styles from './PersonalWorkspace.module.css';
 import PropTypes from 'prop-types';
 
-const Dock = ({ icons, onClickIcon }) => {
-  console.log('Rendering Dock with icons:', icons);
-
-  return (
-    <div className={styles.dock}>
-      {icons.map((icon, index) => (
-        <React.Fragment key={icon.id}>
-          {index > 0 && icons[index - 1].type === 'dynamic' && icon.type === 'fixed' && (
-            <div className={styles.divider} />
-          )}
-          <a
-            href={icon.url || "#"}
-            onClick={(e) => {
-              if (icon.url) {
-                e.preventDefault();
-                console.log('Opening new window for:', icon.url);
-                window.open(icon.url, '_blank'); // Open URL in a new tab or window
-              } else {
-                e.preventDefault();
-                console.log('Restoring window:', icon.id);
-                onClickIcon(icon.id);
-              }
-            }}
-            className={styles.dockItem}
-          >
-            <img src={icon.src} alt={`Icon for ${icon.id}`} />
-          </a>
-        </React.Fragment>
-      ))}
-    </div>
-  );
-};
-
+const Dock = ({ icons, onClickIcon }) => (
+  <div className={styles.dock}>
+    {icons.map((icon, index) => (
+      <React.Fragment key={icon.id}>
+        {index > 0 && icons[index - 1].type === 'dynamic' && icon.type === 'fixed' && (
+          <div className={styles.divider} />
+        )}
+        <a
+          href={icon.url || "#"}
+          onClick={(e) => {
+            if (icon.url) {
+              e.preventDefault();
+              window.open(icon.url, '_blank');
+            } else {
+              e.preventDefault();
+              onClickIcon(icon.id);
+            }
+          }}
+          className={styles.dockItem}
+        >
+          <img src={icon.src} alt={`Icon for ${icon.id}`} />
+        </a>
+      </React.Fragment>
+    ))}
+  </div>
+);
 
 Dock.propTypes = {
   icons: PropTypes.arrayOf(
@@ -51,38 +45,37 @@ Dock.propTypes = {
 
 const PersonalWorkspace = () => {
   const [windows, setWindows] = useState({
-    systemConfig: { minimized: false, icon: "./Images/MacConsole.png" },
-    personalCard: { minimized: false, icon: "./Images/SafariIcon.png" },
+    systemConfig: { minimized: false, zIndex: 1, icon: "./Images/MacConsole.png" },
+    personalCard: { minimized: false, zIndex: 2, icon: "./Images/SafariIcon.png" },
+    projectBrowser: { minimized: false, zIndex: 3, icon: "./Images/ProjectIcon.png" },
   });
 
+  const [highestZIndex, setHighestZIndex] = useState(3);
+
   const handleMinimize = (windowName) => {
-    console.log(`Minimizing window: ${windowName}`);
-    setWindows(prevWindows => {
-      const updatedWindows = {
-        ...prevWindows,
-        [windowName]: { ...prevWindows[windowName], minimized: true }
-      };
-      console.log('Updated windows state after minimize:', updatedWindows);
-      return updatedWindows;
-    });
+    setWindows((prevWindows) => ({
+      ...prevWindows,
+      [windowName]: { ...prevWindows[windowName], minimized: true },
+    }));
   };
 
   const handleRestore = (windowName) => {
-    console.log(`Restoring window: ${windowName}`);
-    setWindows(prevWindows => {
-      const updatedWindows = {
-        ...prevWindows,
-        [windowName]: { ...prevWindows[windowName], minimized: false }
-      };
-      console.log('Updated windows state after restore:', updatedWindows);
-      return updatedWindows;
-    });
+    setWindows((prevWindows) => ({
+      ...prevWindows,
+      [windowName]: { ...prevWindows[windowName], minimized: false },
+    }));
+  };
+
+  const handleFocus = (windowName) => {
+    setHighestZIndex((prevZIndex) => prevZIndex + 1);
+    setWindows((prevWindows) => ({
+      ...prevWindows,
+      [windowName]: { ...prevWindows[windowName], zIndex: highestZIndex + 1 },
+    }));
   };
 
   const fixedDockIcons = [
     { id: "website1", src: "./Images/Github.png", url: "https://github.com/Exploding-Soda", type: "fixed" },
-    { id: "website2", src: "https://placehold.co/48", url: "https://example.com", type: "fixed" },
-    { id: "website3", src: "https://placehold.co/48", url: "https://example.com", type: "fixed" },
   ];
 
   const dynamicDockIcons = Object.keys(windows)
@@ -94,19 +87,17 @@ const PersonalWorkspace = () => {
     }));
 
   const dockIcons = [...dynamicDockIcons, ...fixedDockIcons];
-  
-  console.log('Current dockIcons state:', dockIcons);
 
   return (
     <div className={styles.workspace}>
       {!windows.systemConfig.minimized && (
-        <DraggableWindow 
-          title="" 
+        <DraggableWindow
+          title="System Config"
           initialSize={{ width: window.innerWidth * 0.5, height: window.innerHeight * 0.5 }}
           positionType="top-left"
           onMinimize={() => handleMinimize('systemConfig')}
-          onFocus={() => console.log('System Config window focused')}
-          zIndex={1}
+          onFocus={() => handleFocus('systemConfig')}
+          zIndex={windows.systemConfig.zIndex}
         >
           <div style={{ fontFamily: 'monospace', backgroundColor: '#1e1e1e', color: '#00ff00', padding: '10px' }}>
             <h2 style={{ borderBottom: '1px solid #00ff00' }}>[系统配置控制台]</h2>
@@ -147,15 +138,28 @@ const PersonalWorkspace = () => {
       )}
 
       {!windows.personalCard.minimized && (
-        <DraggableWindow 
-          title="" 
+        <DraggableWindow
+          title="Personal Card"
           initialSize={{ width: window.innerWidth * 0.5, height: window.innerHeight * 0.8 }}
           positionType="bottom-right"
           onMinimize={() => handleMinimize('personalCard')}
-          onFocus={() => console.log('Personal Card window focused')}
-          zIndex={1}
+          onFocus={() => handleFocus('personalCard')}
+          zIndex={windows.personalCard.zIndex}
         >
           <PersonalCard />
+        </DraggableWindow>
+      )}
+
+      {!windows.projectBrowser.minimized && (
+        <DraggableWindow
+          title="Projects"
+          initialSize={{ width: window.innerWidth * 0.4, height: window.innerHeight * 0.6 }}
+          positionType="bottom-left"
+          onMinimize={() => handleMinimize('projectBrowser')}
+          onFocus={() => handleFocus('projectBrowser')}
+          zIndex={windows.projectBrowser.zIndex}
+        >
+          <ProjectBrowser />
         </DraggableWindow>
       )}
 
@@ -271,6 +275,5 @@ const PersonalCard = () => {
     </div>
   );
 };
-
 
 export default PersonalWorkspace;

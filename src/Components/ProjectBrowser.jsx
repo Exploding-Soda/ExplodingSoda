@@ -46,31 +46,18 @@ const projects = [
 
 function ProjectBrowser() {
     return (
-        <div className={styles.fullScreen}>
-            <div className={styles.window}>
-                <div className={styles.windowHeader}>
-                    <div className={styles.windowButtons}>
-                        <div className={styles.windowButton}></div>
-                        <div className={styles.windowButton}></div>
-                        <div className={styles.windowButton}></div>
+        <div className={styles.content}>
+            {projects.map(project => (
+                <a key={project.id} href={project.link} target="_blank" rel="noopener noreferrer" className={styles.projectItem}>
+                    <img src={project.image} alt={project.alt} className={styles.projectImage} />
+                    <div className={styles.projectContent}>
+                        <div className={styles.projectTitle}>{project.name}</div>
+                        <div className={styles.projectDescription}>{project.description}</div>
                     </div>
-                    <div className={styles.windowTitle}>Projects</div>
-                </div>
-                <div className={styles.content}>
-                    {projects.map(project => (
-                        <a key={project.id} href={project.link} target="_blank" rel="noopener noreferrer" className={styles.projectItem}>
-                            <img src={project.image} alt={project.alt} className={styles.projectImage} />
-                            <div className={styles.projectContent}>
-                                <div className={styles.projectTitle}>{project.name}</div>
-                                <div className={styles.projectDescription}>{project.description}</div>
-                            </div>
-                        </a>
-                    ))}
-                </div>
-            </div>
+                </a>
+            ))}
         </div>
     );
 }
-
 
 export default ProjectBrowser;

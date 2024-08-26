@@ -109,7 +109,7 @@ const DraggableWindow = ({ children, title, initialPosition, initialSize, positi
                 zIndex: zIndex,
                 transition: 'transform 0.5s ease-in-out, opacity 0.5s ease-in-out'
             }}
-            onMouseDown={(e) => e.stopPropagation()} // Prevent drag on content click
+            onMouseDown={() => onFocus()} // Trigger onFocus when any part of the window is clicked
         >
             <div className={styles.header} onMouseDown={handleHeaderMouseDown}>
                 <div className={styles.buttons}>
