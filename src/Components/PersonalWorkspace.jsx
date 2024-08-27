@@ -195,7 +195,7 @@ const PersonalCard = () => {
             <span className="bg-gray-600 text-white px-2 py-1 rounded">Flask & FastAPI</span>
             <span className="bg-blue-400 text-white px-2 py-1 rounded">OpenAI API & GPT Finetune</span>
             <span className="bg-gray-500 text-white px-2 py-1 rounded">Selenium & 自动化工具开发</span>
-            <span className="bg-green-600 text-white px-2 py-1 rounded">MySQL & 向量数据库</span>
+            <span className="bg-green-600 text-white px-2 py-1 rounded">MySQL & Embedding</span>
           </div>
         </div>
         <div className="mt-6">

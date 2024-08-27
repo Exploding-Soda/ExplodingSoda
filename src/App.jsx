@@ -47,14 +47,11 @@ function App() {
                 <div className="section">
                     <PersonalWorkspace />
                 </div>
-                {/* <div className="section">
-                    <ProjectBrowser />
-                </div> */}
-                <div className="section">
-                    <AlternativeComponent />
-                </div>
                 <div className="section">
                     <Dashboard />
+                </div>
+                <div className="section">
+                    <AlternativeComponent />
                 </div>
             </div>
         </div>
