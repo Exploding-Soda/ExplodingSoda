@@ -125,3 +125,8 @@
     max-height: 150px;
   }
 }
+
+::selection {
+  background: transparent;
+}
+
