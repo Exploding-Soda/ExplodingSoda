@@ -1,0 +1,127 @@
+@import './tailwind.min.css';
+
+.fullScreen {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.window {
+  background-color: #ffffff;
+  width: 80%;
+  max-width: 900px;
+  height: 80%;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+}
+
+.windowHeader {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+.windowButtons {
+  display: flex;
+  gap: 8px;
+  margin-right: auto;
+}
+
+.windowButton {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ff5f57;
+}
+
+.windowButton:nth-child(2) {
+  background-color: #ffbd2e;
+}
+
+.windowButton:nth-child(3) {
+  background-color: #28c940;
+}
+
+.windowTitle {
+  flex-grow: 1;
+  text-align: center;
+  font-weight: 600;
+  color: #333;
+}
+
+.content {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 每行两个项目 */
+  gap: 20px;
+  justify-items: stretch;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.projectItem {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.projectItem:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.projectImage {
+  width: 100%;
+  height: auto;
+  max-height: 250px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.projectTitle {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.projectDescription {
+  color: #666;
+  font-size: 1rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .window {
+    width: 90%;
+    height: 90%;
+  }
+
+  .content {
+    grid-template-columns: 1fr; /* 小屏幕下每行一个项目 */
+  }
+
+  .projectImage {
+    max-height: 150px;
+  }
+}

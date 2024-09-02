@@ -75,9 +75,6 @@ const AlternativeComponent = () => {
                                 Chatbot Server Offline
                             </p>
                             <p className="text-gray-600 text-center mb-8">
-                                Server starts irregularly by me.
-                                However if you wish to try this feature urgently reach a contact with me.
-                                
                                 Come back and check later
                             </p>
                         </div>

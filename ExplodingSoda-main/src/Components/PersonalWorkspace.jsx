@@ -102,8 +102,8 @@ const PersonalWorkspace = () => {
           <div style={{ fontFamily: 'monospace', backgroundColor: '#1e1e1e', color: '#00ff00', padding: '10px' }}>
             <h2 style={{ borderBottom: '1px solid #00ff00' }}>[系统配置控制台]</h2>
             <section>
-              <p>> 欢迎来到我的主页。</p>
-              <p>> 这里有什么？</p>
+              <p>> 欢迎来到系统配置控制台。</p>
+              <p>> 您正在查看本系统的核心信息：</p>
               <ul>
                 <li>> <strong>个人简介</strong> - 了解我的背景、技能与经验。</li>
                 <li>> <strong>项目展示</strong> - 探索我参与的项目和案例分析。</li>

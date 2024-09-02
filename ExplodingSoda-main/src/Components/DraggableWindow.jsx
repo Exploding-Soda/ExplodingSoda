@@ -32,13 +32,13 @@ const DraggableWindow = ({ children, title, initialPosition, initialSize, positi
 
         if (positionType === 'bottom-left') {
             xPos = 50;
-            yPos = window.innerHeight - initialSize.height - 0;
+            yPos = window.innerHeight - initialSize.height - 100;
         } else if (positionType === 'top-right') {
             xPos = window.innerWidth - initialSize.width - 100;
             yPos = 100;
         } else if (positionType === 'top-left') {
-            xPos = 50;
-            yPos = 20;
+            xPos = 100;
+            yPos = 100;
         } else if (positionType === 'bottom-right') {
             xPos = window.innerWidth - initialSize.width - 100;
             yPos = window.innerHeight - initialSize.height - 100;

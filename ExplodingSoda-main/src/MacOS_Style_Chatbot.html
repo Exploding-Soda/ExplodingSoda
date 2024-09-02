@@ -1,0 +1,699 @@
+<html>
+
+<head>
+    <title>MacOS Styled Chatbot Interface</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    </link>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* 全局设置 */
+        body,
+        a,
+        button,
+        input,
+        select,
+        textarea {
+            cursor: none;
+            /* 保留自定义光标 */
+        }
+
+        #backgroundButton {
+            cursor: none;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* 确保不出现拖动条 */
+        html,
+        body {
+            overflow: hidden;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* MacOS 窗口样式 */
+        .macos-window {
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .macos-titlebar {
+            background: linear-gradient(180deg, #e0e0e0, #c0c0c0);
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            cursor: none;
+            /* 隐藏十字拖动光标，同时保留自定义光标 */
+        }
+
+        .macos-titlebar .buttons {
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+            cursor: none;
+            /* 保留自定义光标 */
+        }
+
+        .macos-titlebar .close {
+            background-color: #ff5f57;
+        }
+
+        .macos-titlebar .minimize {
+            background-color: #ffbd2e;
+        }
+
+        .macos-titlebar .maximize {
+            background-color: #28c840;
+        }
+
+        /* 鼠标悬浮时按钮的背景色加深 */
+        .macos-titlebar .buttons.close:hover {
+            background-color: #e0443e;
+        }
+
+        .macos-titlebar .buttons.minimize:hover {
+            background-color: #e0a628;
+        }
+
+        .macos-titlebar .buttons.maximize:hover {
+            background-color: #24a33a;
+        }
+
+        /* 动画效果 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .fade-out {
+            animation: fadeOut 0.5s ease-in-out forwards;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            to {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+        }
+
+        /* 自定义光标效果 */
+        .cursor-effect {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(58, 58, 58, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            /* 保证光标在最上层 */
+        }
+
+        /* MacOS 背景和形状 */
+        .macos-background {
+            background: linear-gradient(135deg, #e0e0e0, #c0c0c0);
+            animation: macosBackground 5s infinite alternate;
+        }
+
+        @keyframes macosBackground {
+            0% {
+                background-position: 0% 0%;
+            }
+
+            100% {
+                background-position: 100% 100%;
+            }
+        }
+
+        .colorful-background {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        /* 形状动画 */
+        .shape {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: move 10s infinite ease-in-out;
+        }
+
+        .shape.circle {
+            width: 100px;
+            height: 100px;
+        }
+
+        .shape.square {
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+        }
+
+        .shape.triangle {
+            width: 0;
+            height: 0;
+            border-left: 60px solid transparent;
+            border-right: 60px solid transparent;
+            border-bottom: 100px solid rgba(255, 255, 255, 0.2);
+            background: none;
+        }
+
+        @keyframes move {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+
+            100% {
+                transform: translateY(0) rotate(360deg);
+            }
+        }
+
+        /* 形状位置 */
+        .shape-1 {
+            top: 10%;
+            left: 15%;
+        }
+
+        .shape-2 {
+            top: 50%;
+            left: 80%;
+        }
+
+        .shape-3 {
+            top: 75%;
+            left: 20%;
+        }
+
+        .shape-4 {
+            top: 30%;
+            left: 60%;
+        }
+
+        #remainingKeyCount{
+            margin-left: 20px;
+        }
+    </style>
+
+
+</head>
+
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4 macos-background">
+
+    <div class="colorful-background"></div>
+
+    <!-- Shapes in the background -->
+    <div class="shape circle shape-1"></div>
+    <div class="shape square shape-2"></div>
+    <div class="shape triangle shape-3"></div>
+    <div class="shape circle shape-4"></div>
+
+    <!-- Fixed Header -->
+    <header id="header" class="w-full max-w-4xl fixed top-0 left-0 p-4">
+        <nav class="bg-white p-4 rounded-lg shadow-md flex justify-between items-center">
+            <div class="flex space-x-4">
+                <a href="#" class="nav-link text-gray-700 font-medium hover:text-blue-500 transition duration-300"
+                    data-target="home">Home</a>
+                <a href="#" class="nav-link text-gray-700 font-medium hover:text-blue-500 transition duration-300"
+                    data-target="diagram">Diagram</a>
+                <a href="#" class="nav-link text-gray-700 font-medium hover:text-blue-500 transition duration-300"
+                    data-target="about">About</a>
+            </div>
+            <div class="flex space-x-4 ml-auto">
+                <!-- 使用 ml-auto 让按钮组对齐到右边 -->
+                <button id="backgroundButton"
+                    class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300">Select
+                    Background</button>
+                <button id="changeKeyButton"
+                    class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition duration-300">Change
+                    Key</button>
+            </div>
+            <input type="file" id="backgroundInput" class="hidden" accept="image/*">
+            <div id="remainingKeyCount"
+                class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition duration-300">Key
+                Duration: 0</div>
+        </nav>
+    </header>
+
+
+
+    <!-- Content Container -->
+    <div id="content" class="macos-window bg-white w-full max-w-4xl mx-auto relative" style="position: absolute;">
+
+        <div class="macos-titlebar flex items-center justify-between p-2">
+            <div class="flex space-x-2 ml-2">
+                <div class="buttons close"></div>
+                <div class="buttons minimize"></div>
+                <div class="buttons maximize"></div>
+            </div>
+            <div class="text-center flex-1">
+                <span class="text-gray-700 font-medium">Chatbot</span>
+            </div>
+            <div class="w-12"></div>
+        </div>
+
+        <!-- Page Content (only this part changes) -->
+        <div id="pageContent" class="page-content-container h-[600px]">
+            <div id="home" class="page-content flex flex-col md:flex-row h-full">
+                <div class="message-area flex-1 p-4 border-r border-gray-200 flex flex-col justify-between">
+                    <div class="messages space-y-4 overflow-y-auto">
+                        <!-- <div class="message fade-in bg-gray-100 p-3 rounded-lg">
+              <p class="text-gray-800">Hello! How can I assist you today?</p>
+            </div> -->
+                    </div>
+                    <div class="mt-4">
+                        <input type="text" class="w-full p-2 border border-gray-300 rounded-lg"
+                            placeholder="Type a message...">
+                    </div>
+                </div>
+                <div class="system-message-area w-full md:w-1/3 p-4 bg-gray-50 overflow-y-auto">
+                    <!-- <h2 class="text-lg font-semibold text-gray-700 mb-4">System Messages</h2> -->
+                    <div class="system-messages space-y-4">
+                        <!-- <div class="system-message fade-in bg-gray-200 p-3 rounded-lg">
+              <p class="text-gray-800">System: Welcome to the chatbot interface.</p>
+            </div> -->
+                    </div>
+                </div>
+            </div>
+            <div id="diagram" class="page-content hidden p-4">
+                <p class="text-gray-800">This is the Diagram page content.</p>
+            </div>
+            <div id="about" class="page-content hidden p-4">
+                <p class="text-gray-800">This is the About page content.</p>
+            </div>
+        </div>
+    </div>
+    <div class="cursor-effect" id="cursorEffect"></div>
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+        style="display:none">
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h2 class="text-2xl font-semibold mb-4">Login</h2>
+            <p class="text-gray-600 mb-4">Please enter your key to continue:</p>
+            <input id="loginKey" type="text" class="w-full p-2 border border-gray-300 rounded-lg mb-4"
+                placeholder="Enter your key">
+            <button id="loginButton"
+                class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300">Login</button>
+            <p id="loginError" class="text-red-500 mt-2 hidden">Please enter a valid key.</p>
+        </div>
+    </div>
+
+    <!-- Style -->
+    <script>
+        const backgroundButton = document.getElementById('backgroundButton');
+        const backgroundInput = document.getElementById('backgroundInput');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pages = document.querySelectorAll('.page-content');
+        const cursorEffect = document.getElementById('cursorEffect');
+        const contentElement = document.getElementById('content');
+        const titleBarElement = document.querySelector('.macos-titlebar');
+        const headerElement = document.getElementById('header');
+        const draggableHeaderArea = document.querySelector('.bg-white.p-4.rounded-lg.shadow-md.flex.justify-between.items-center');
+        const closeButton = document.querySelector('.buttons.close');
+
+
+        let currentZIndex = 10;
+
+        cursorEffect.style.position = 'fixed';
+        cursorEffect.style.zIndex = 9999;
+
+        backgroundButton.addEventListener('click', () => {
+            backgroundInput.click();
+        });
+
+        backgroundInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.body.style.backgroundImage = `url(${e.target.result})`;
+                    document.body.style.backgroundSize = 'cover';
+                    document.body.style.backgroundPosition = 'center';
+                    document.body.classList.remove('macos-background');
+                    document.querySelector('.colorful-background').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                contentElement.classList.remove('fade-out');
+                contentElement.classList.add('fade-in');
+                contentElement.style.display = 'block';
+
+                const target = e.target.getAttribute('data-target');
+                pages.forEach(page => {
+                    if (page.id === target) {
+                        page.classList.remove('hidden');
+                        page.classList.add('fade-in');
+                    } else {
+                        page.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            const offsetX = 10; // 调整水平偏移量，可以是正数或负数
+            const offsetY = 10; // 调整垂直偏移量，可以是正数或负数
+
+            cursorEffect.style.left = `${e.clientX - offsetX}px`;
+            cursorEffect.style.top = `${e.clientY - offsetY}px`;
+        });
+
+        closeButton.addEventListener('click', () => {
+            contentElement.classList.add('fade-out');
+            setTimeout(() => {
+                contentElement.style.display = 'none';
+            }, 500); // 与fade-out动画的持续时间相同
+        });
+
+        function makeElementDraggable(element, targetElement) {
+            element.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+
+                currentZIndex += 1;
+                targetElement.style.zIndex = currentZIndex;
+
+                let shiftX = e.clientX - targetElement.getBoundingClientRect().left;
+                let shiftY = e.clientY - targetElement.getBoundingClientRect().top;
+
+                function moveAt(pageX, pageY) {
+                    targetElement.style.left = pageX - shiftX + 'px';
+                    targetElement.style.top = pageY - shiftY + 'px';
+                }
+
+                function onMouseMove(event) {
+                    moveAt(event.clientX, event.clientY);
+                }
+
+                document.addEventListener('mousemove', onMouseMove);
+
+                function onMouseUp() {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                }
+
+                document.addEventListener('mouseup', onMouseUp);
+            });
+
+            element.ondragstart = function () {
+                return false;
+            };
+        }
+
+        makeElementDraggable(titleBarElement, contentElement);
+        makeElementDraggable(draggableHeaderArea, headerElement);
+    </script>
+
+    <!-- Server -->
+    <script>
+        const serverDomain = 'wss://cn-sz-yd-plustmp2.natfrp.cloud:43049'; // 设置服务器域名
+        const httpsServerDomain = `https://cn-sz-yd-plustmp2.natfrp.cloud:43049`
+
+        const remainingKeyCount = document.getElementById("remainingKeyCount")
+        let remainingCount = 0;
+        
+
+        let ws = new WebSocket(serverDomain);
+        let ellipsisDiv = null;
+        let heartbeatInterval; // 心跳定时器
+        const HEARTBEAT_INTERVAL = 30000; // 每30秒发送一次心跳
+
+        async function initialize() {
+            remainingCount = await fetchRemainingCount();
+            remainingKeyCount.textContent = `Key Duration: ${remainingCount}`
+        }
+
+        async function fetchRemainingCount() {
+            const userKey = localStorage.getItem('userKey');
+            if (userKey) {
+                try {
+                    const response = await fetch(`${httpsServerDomain}/remaining_count/${userKey}`);
+                    const data = await response.json();
+                    if (data.remainingCount !== undefined) {
+                        console.log(`Remaining count for key ${data.key}: ${data.remainingCount}`);
+                        return data.remainingCount; // Return the value
+                    } else {
+                        console.error('Error fetching remaining count:', data.error);
+                        return 0; // Return 0 in case of an error
+                    }
+                } catch (error) {
+                    console.error('Error fetching remaining count:', error);
+                    return 0; // Return 0 in case of an error
+                }
+            } else {
+                console.log('User key not found.');
+                return 0; // Return 0 if userKey is not found
+            }
+        }
+
+        // check userKey when loaded page
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('.message-area input').disabled = true; // 禁用消息输入框
+            const userKey = localStorage.getItem('userKey');
+
+            if (userKey) {
+                // 如果有 userKey，发送验证请求
+                if (ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({ type: 'verify', key: userKey }));
+                } else {
+                    console.log('WebSocket is not open.');
+                }
+            } else {
+                // 如果没有 userKey，显示登录模态框
+                document.getElementById('loginModal').style.display = 'flex';
+            }
+        });
+
+        ws.onopen = () => {
+            console.log('Connected to the server');
+            startHeartbeat(); // 开始心跳
+
+            // 从 localStorage 获取用户的 key
+            const userKey = localStorage.getItem('userKey');
+
+            if (userKey) {
+                // 发送 key 验证请求
+                ws.send(JSON.stringify({ type: 'verify', key: userKey }));
+            } else {
+                console.log('No user key found, please log in.');
+            }
+        };
+
+        // Change Key
+        document.getElementById('changeKeyButton').addEventListener('click', () => {
+            // 显示登录弹窗
+            document.getElementById('loginModal').style.display = 'flex';
+            document.querySelector('.message-area input').disabled = true; // 禁用消息输入框
+        });
+
+        document.getElementById('loginButton').addEventListener('click', () => {
+            const key = document.getElementById('loginKey').value.trim();
+
+            if (key) {
+                localStorage.setItem('userKey', key);
+
+                if (ws.readyState === WebSocket.OPEN) {
+                    // 发送 key 验证请求
+                    ws.send(JSON.stringify({ type: 'verify', key }));
+                } else {
+                    console.log('WebSocket is not open.');
+                }
+
+                // 隐藏登录弹窗
+                document.getElementById('loginModal').style.display = 'none';
+                document.querySelector('.message-area input').disabled = false; // 启用消息输入框
+            } else {
+                document.getElementById('loginError').classList.remove('hidden');
+            }
+        });
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data); // 解析 JSON 数据
+
+            console.log('Received from server:', data); // 打印服务器返回的所有数据
+
+            // 这里是你现有的处理逻辑
+            const messagesContainer = document.querySelector('.messages.space-y-4.overflow-y-auto');
+            const systemMessagesContainer = document.querySelector('.system-messages.space-y-4');
+            const inputElement = document.querySelector('.message-area input');
+
+            if (ellipsisDiv) {
+                messagesContainer.removeChild(ellipsisDiv);
+                ellipsisDiv = null;
+            }
+
+
+            if (data.type === 'system') {
+                if (data.message === 'Key verified successfully.') {
+                    inputElement.disabled = false;
+                    document.getElementById('loginModal').style.display = 'none';
+                } else if (data.message === 'Invalid key') {
+                    inputElement.disabled = true;
+                    document.getElementById('loginModal').style.display = 'flex';
+                    document.getElementById('loginError').classList.remove('hidden');
+                } else if (data.message === 'No remaining uses') {
+                    inputElement.disabled = true;
+                }
+
+                // 更新UI或者显示消息
+                const systemMessageDiv = document.createElement('div');
+                systemMessageDiv.className = 'system-message fade-in bg-gray-200 p-3 rounded-lg';
+                systemMessageDiv.innerHTML = `<p class="text-gray-800"><strong>System:</strong> ${data.message}</p>`;
+                systemMessagesContainer.appendChild(systemMessageDiv);
+                systemMessagesContainer.scrollTop = systemMessagesContainer.scrollHeight;
+
+                // 消息显示 10 秒后消失
+                let timeoutId = setTimeout(() => {
+                    systemMessageDiv.style.animation = 'fadeOut 0.5s forwards';
+                    systemMessageDiv.addEventListener('animationend', () => {
+                        systemMessagesContainer.removeChild(systemMessageDiv);
+                    });
+                }, 10000);
+
+                systemMessageDiv.addEventListener('mouseover', () => {
+                    clearTimeout(timeoutId);
+                });
+
+                systemMessageDiv.addEventListener('mouseout', () => {
+                    timeoutId = setTimeout(() => {
+                        systemMessageDiv.style.animation = 'fadeOut 0.5s forwards';
+                        systemMessageDiv.addEventListener('animationend', () => {
+                            systemMessagesContainer.removeChild(systemMessageDiv);
+                        });
+                    }, 10000);
+                });
+            } else if (data.type === 'chat' && data.response) {
+                // 创建一个新的 div 元素来显示服务器返回的消息
+                const serverMessageDiv = document.createElement('div');
+                serverMessageDiv.className = 'message fade-in bg-gray-100 p-3 rounded-lg';
+                serverMessageDiv.innerHTML = `<p class="text-gray-800"><strong>Bot:</strong> ${data.response}</p>`;
+
+                // 将服务器返回的消息添加到 messagesContainer 中
+                messagesContainer.appendChild(serverMessageDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight; // 自动滚动到最底部
+            } else if (data.error) {
+                const errorMessageDiv = document.createElement('div');
+                errorMessageDiv.className = 'message fade-in bg-red-100 p-3 rounded-lg';
+                errorMessageDiv.innerHTML = `<p class="text-red-800"><strong>Error:</strong> ${data.error}</p>`;
+                messagesContainer.appendChild(errorMessageDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        };
+
+        ws.onclose = () => {
+            console.log('Disconnected from the server');
+            stopHeartbeat(); // 停止心跳
+        };
+
+        function sendMessage() {
+            if (remainingCount <= 0) {
+                // 创建一个新的 div 元素来显示Key消耗完毕的消息
+                const keyRanOutDiv = document.createElement('div');
+                keyRanOutDiv.className = 'message fade-in bg-gray-100 p-3 rounded-lg';
+                keyRanOutDiv.innerHTML = `<p class="text-gray-800"><strong>Bot:</strong> ${data.response}</p>`;
+                messagesContainer.appendChild(keyRanOutDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight; // 自动滚动到最底部
+                return
+            } else {
+                remainingCount--
+                remainingKeyCount.textContent = `Key Duration: ${remainingCount}`
+            }
+
+            const userInput = document.querySelector('.message-area input');
+            const userMessage = userInput.value.trim();
+            const userKey = localStorage.getItem('userKey'); // Retrieve the user key from localStorage
+
+            if (userMessage === '') {
+                alert('Please enter a message.');
+                return;
+            }
+
+            // Display the user's message in the UI
+            const messagesContainer = document.querySelector('.messages.space-y-4.overflow-y-auto');
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.className = 'message fade-in bg-gray-100 p-3 rounded-lg';
+            userMessageDiv.innerHTML = `<p class="text-gray-800"><strong>You:</strong> ${userMessage}</p>`;
+            messagesContainer.appendChild(userMessageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            // Add the ellipsis animation
+            ellipsisDiv = document.createElement('div');
+            ellipsisDiv.className = 'ellipsis-container';
+            ellipsisDiv.innerHTML = `
+    <div class="ellipsis"></div>
+    <div class="ellipsis"></div>
+    <div class="ellipsis"></div>
+  `;
+            messagesContainer.appendChild(ellipsisDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            // Send the message to the server
+            ws.send(JSON.stringify({
+                userId: 'User123',
+                message: userMessage,
+                type: 'chat', // Set the message type as 'chat'
+                key: userKey // Include the user's key in the message
+            }));
+
+            userInput.value = '';
+        }
+
+        function startHeartbeat() {
+            heartbeatInterval = setInterval(() => {
+                if (ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({ type: 'heartbeat' })); // 发送心跳消息
+                    console.log('Heartbeat sent');
+                }
+            }, HEARTBEAT_INTERVAL);
+        }
+
+        function stopHeartbeat() {
+            clearInterval(heartbeatInterval); // 停止心跳
+        }
+
+        // 为 input 元素添加事件监听器，在按下 "Enter" 键时发送消息
+        const inputElement = document.querySelector('.message-area input');
+        inputElement.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        initialize()
+    </script>
+
+</body>
+
+</html>
